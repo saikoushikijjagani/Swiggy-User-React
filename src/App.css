@@ -315,3 +315,6 @@ body {
 .zoomEffect:hover {
     transform: scale(0.95);
 }
+.chainSection {
+  min-height: 250px; /* prevents layout shift/flicker */
+}

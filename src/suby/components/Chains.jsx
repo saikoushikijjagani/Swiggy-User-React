@@ -40,49 +40,50 @@ const Chains = () => {
 
   return (
     <div className='mediaChainSection'>
-      <div className="loaderSection">
-        {loading && (
-          <>
-            <div className="loader">Your 🥣 is Loading...</div>
-            <MagnifyingGlass
-              visible={true}
-              height="80"
-              width="80"
-              ariaLabel="magnifying-glass-loading"
-              glassColor="#c0efff"
-              color="#e15b64"
-            />
-          </>
-        )}
-      </div>
-      <div className="btnSection">
-        <button onClick={() => handleScroll("left")}>
-          <FaRegArrowAltCircleLeft className='btnIcons' />
-        </button>
-        <button onClick={() => handleScroll("right")}>
-          <FaRegArrowAltCircleRight className='btnIcons' />
-        </button>
-      </div>
-      <h3 className='chainTitle'>Top restaurant chains in Hyderabad</h3>
-      <section className="chainSection" id="chainGallery">
-        {vendorData.vendors && vendorData.vendors.map((vendor) => (
-          <div className="vendorBox" key={vendor._id || vendor.firm?.[0]?._id}>
-            {vendor.firm.map((item) => (
-              <div key={item._id}>
-                <Link to={`/products/${item._id}/${item.firmName}`} className="link">
-                  <div className="firmImage">
-                    <img
-                      src={`${API_URL}/uploads/${item.image}`}
-                      alt={item.firmName}
-                      onError={e => { e.target.onerror = null; e.target.src = fallbackImg; }}
-                    />
+      {loading ? (
+        <div className="loaderSection">
+          <div className="loader">Your 🥣 is Loading...</div>
+          <MagnifyingGlass
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="magnifying-glass-loading"
+            glassColor="#c0efff"
+            color="#e15b64"
+          />
+        </div>
+      ) : (
+        <>
+          <div className="btnSection">
+            <button onClick={() => handleScroll("left")}>
+              <FaRegArrowAltCircleLeft className='btnIcons' />
+            </button>
+            <button onClick={() => handleScroll("right")}>
+              <FaRegArrowAltCircleRight className='btnIcons' />
+            </button>
+          </div>
+          <h3 className='chainTitle'>Top restaurant chains in Hyderabad</h3>
+          <section className="chainSection" id="chainGallery" style={{ minHeight: "250px" }}>
+            {vendorData.vendors && vendorData.vendors.map((vendor) => (
+              <div className="vendorBox" key={vendor._id || vendor.firm?.[0]?._id}>
+                {vendor.firm.map((item) => (
+                  <div key={item._id}>
+                    <Link to={`/products/${item._id}/${item.firmName}`} className="link">
+                      <div className="firmImage">
+                        <img
+                          src={`${API_URL}/uploads/${item.image}`}
+                          alt={item.firmName}
+                          onError={e => { e.target.onerror = null; e.target.src = fallbackImg; }}
+                        />
+                      </div>
+                    </Link>
                   </div>
-                </Link>
+                ))}
               </div>
             ))}
-          </div>
-        ))}
-      </section>
+          </section>
+        </>
+      )}
     </div>
   );
 };
