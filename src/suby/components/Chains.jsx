@@ -4,6 +4,8 @@ import { FaRegArrowAltCircleRight, FaRegArrowAltCircleLeft } from "react-icons/f
 import { MagnifyingGlass } from 'react-loader-spinner';
 import { Link } from 'react-router-dom';
 
+const fallbackImg = '/placeholder.png'; // place a placeholder image in public
+
 const Chains = () => {
   const [vendorData, setVendorData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,11 +15,9 @@ const Chains = () => {
       const response = await fetch(`${API_URL}/vendor/all-vendors?order=desc`);
       const newData = await response.json();
       setVendorData(newData);
-      console.log("this is api Data ", newData);
       setLoading(false);
     } catch (error) {
       alert("Failed to fetch data");
-      console.error("Failed to fetch data", error);
       setLoading(true);
     }
   };
@@ -29,17 +29,12 @@ const Chains = () => {
   const handleScroll = (direction) => {
     const gallery = document.getElementById("chainGallery");
     const scrollAmount = 500;
-
-    if (direction === "left") {
-      gallery.scrollTo({
-        left: gallery.scrollLeft - scrollAmount,
-        behavior: "smooth"
-      });
-    } else if (direction === "right") {
-      gallery.scrollTo({
-        left: gallery.scrollLeft + scrollAmount,
-        behavior: "smooth"
-      });
+    if (gallery) {
+      if (direction === "left") {
+        gallery.scrollTo({ left: gallery.scrollLeft - scrollAmount, behavior: "smooth" });
+      } else if (direction === "right") {
+        gallery.scrollTo({ left: gallery.scrollLeft + scrollAmount, behavior: "smooth" });
+      }
     }
   };
 
@@ -48,23 +43,18 @@ const Chains = () => {
       <div className="loaderSection">
         {loading && (
           <>
-            <div className="loader">
-              Your 🥣 is Loading...
-            </div>
+            <div className="loader">Your 🥣 is Loading...</div>
             <MagnifyingGlass
               visible={true}
               height="80"
               width="80"
               ariaLabel="magnifying-glass-loading"
-              wrapperStyle={{}}
-              wrapperClass="magnifying-glass-wrapper"
               glassColor="#c0efff"
               color="#e15b64"
             />
           </>
         )}
       </div>
-
       <div className="btnSection">
         <button onClick={() => handleScroll("left")}>
           <FaRegArrowAltCircleLeft className='btnIcons' />
@@ -73,19 +63,19 @@ const Chains = () => {
           <FaRegArrowAltCircleRight className='btnIcons' />
         </button>
       </div>
-
       <h3 className='chainTitle'>Top restaurant chains in Hyderabad</h3>
-
       <section className="chainSection" id="chainGallery">
         {vendorData.vendors && vendorData.vendors.map((vendor) => (
           <div className="vendorBox" key={vendor._id || vendor.firm?.[0]?._id}>
             {vendor.firm.map((item) => (
               <div key={item._id}>
-                {/* Optional firm name */}
-                {/* <div>{item.firmName}</div> */}
                 <Link to={`/products/${item._id}/${item.firmName}`} className="link">
                   <div className="firmImage">
-                    <img src={`${API_URL}/uploads/${item.image}`} alt={item.firmName} />
+                    <img
+                      src={`${API_URL}/uploads/${item.image}`}
+                      alt={item.firmName}
+                      onError={e => { e.target.onerror = null; e.target.src = fallbackImg; }}
+                    />
                   </div>
                 </Link>
               </div>

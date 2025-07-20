@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { API_URL } from "../api";
 import { Link } from "react-router-dom";
 
+const fallbackImg = '/placeholder.png';
+
 const FirmCollections = () => {
   const [firmData, setFirmData] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState('All');
-  const [activeCategory, setActiveCategory]= useState('all');
+  const [activeCategory, setActiveCategory] = useState('all');
 
   const firmDataHandler = async () => {
     try {
@@ -14,7 +16,6 @@ const FirmCollections = () => {
       setFirmData(newFirmData.vendors);
     } catch (error) {
       alert("firm data not fetched");
-      console.error("firm data not fetched", error);
     }
   };
 
@@ -40,25 +41,29 @@ const FirmCollections = () => {
       <section className="firmSection">
         {firmData.map((apple) => {
           return apple.firm.map((item)=>{
-            if(selectedRegion === "All" || 
+            if(selectedRegion === "All" ||
               item.region.includes(selectedRegion.toLocaleLowerCase())
             ){
                 return (
                   <Link to={`/products/${item._id}/${item.firmName}`} className="link" key={item._id}>
-   <div className="zoomEffect">
-   <div className="firmGroupBox">
-                      <div className="firmGroup">
-                        <img src={`${API_URL}/uploads/${item.image}`} alt={item.firmName} />
-                        <div className="firmOffer">{item.offer}</div>
-                      </div>
-                      <div className="firmDetails">
-                        <strong>{item.firmName}</strong>
-                        <br />
-                        <div className="firmArea">{item.region.join(", ")}</div>
-                        <div className="firmArea">{item.area}</div>
+                    <div className="zoomEffect">
+                      <div className="firmGroupBox">
+                        <div className="firmGroup">
+                          <img
+                            src={`${API_URL}/uploads/${item.image}`}
+                            alt={item.firmName}
+                            onError={e => { e.target.onerror = null; e.target.src = fallbackImg; }}
+                          />
+                          <div className="firmOffer">{item.offer}</div>
+                        </div>
+                        <div className="firmDetails">
+                          <strong>{item.firmName}</strong>
+                          <br />
+                          <div className="firmArea">{item.region.join(", ")}</div>
+                          <div className="firmArea">{item.area}</div>
+                        </div>
                       </div>
                     </div>
-   </div>
                   </Link>
                 );
             }
