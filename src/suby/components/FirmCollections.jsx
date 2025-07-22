@@ -50,10 +50,11 @@ const FirmCollections = () => {
                       <div className="firmGroupBox">
                         <div className="firmGroup">
                           <img
-                            src={`${API_URL}/uploads/${item.image}`}
-                            alt={item.firmName}
-                            onError={e => { e.target.onerror = null; e.target.src = fallbackImg; }}
-                          />
+  className="w-[150px] h-[150px] rounded-xl"
+  src={`https://react-swiggy-backend-dashboard-6plsmdrbs.onrender.com/uploads/${each.image}`}
+  alt={each.name}
+/>
+
                           <div className="firmOffer">{item.offer}</div>
                         </div>
                         <div className="firmDetails">
